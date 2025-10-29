@@ -86,11 +86,12 @@ async function example4() {
 
   try {
     // Try to fetch a joke with very specific criteria that might not exist
-    const joke = await client.getJoke({
+    const result = await client.getJoke({
       category: 'Programming',
       contains: 'nonexistent-search-term-that-will-not-match-anything',
     })
 
+    const joke = Array.isArray(result) ? result[0] : result
     console.log(`\nJoke:\n${client.formatJoke(joke)}\n`)
   } catch (error) {
     if (error instanceof JokeApiClientError) {
@@ -132,7 +133,8 @@ async function example5() {
 
     // Fetch 5 jokes - the last 2 will be rate limited
     for (let i = 0; i < 5; i++) {
-      const joke = await client.getJoke({ category: 'Programming' })
+      const result = await client.getJoke({ category: 'Programming' })
+      const joke = Array.isArray(result) ? result[0] : result
       const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
 
       console.log(`\n[${elapsed}s] Joke ${i + 1}:`)
